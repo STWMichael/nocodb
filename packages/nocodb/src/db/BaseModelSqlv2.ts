@@ -3707,7 +3707,7 @@ class BaseModelSqlv2 {
       const toBeUpdated = [];
       const toRead = [];
       const readChunkSize = 100;
-      for (const d of updateDatas) {
+      for (const [i, d] of updateDatas.entries()) {
         const pkValues = this._extractPksValues(d);
         if (!pkValues) {
           // throw or skip if no pk provided
@@ -3721,7 +3721,7 @@ class BaseModelSqlv2 {
 
           toRead.push(pkValues);
 
-          if (toRead.length >= readChunkSize) {
+          if (toRead.length >= readChunkSize || i === updateDatas.length - 1) {
             const tempToRead = toRead.splice(0, toRead.length);
             const oldRecords = await this.list(
               {
